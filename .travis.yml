@@ -1,0 +1,17 @@
+sudo: false
+
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+env:
+  - VERSION=1.3.0
+  - VERSION=master
+
+script:
+  - export MRUBY_CONFIG="$TRAVIS_BUILD_DIR/.travis_build_config.rb"
+  - git clone --depth 1 --branch $VERSION https://github.com/mruby/mruby.git
+  - cd mruby
+  - ./minirake test
