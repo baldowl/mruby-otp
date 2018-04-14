@@ -20,7 +20,7 @@ end
 
 ```ruby
 > hotp = HOTP.new(Base32.encode('12345678901234567890'))
- => #<HOTP:0x7f8f23025fe8 @secret="12345678901234567890", @digits=6, @digest="sha1">
+ => #<HOTP:0x7fa74a0049b0 @digits=6, @digest="sha1", @type="hotp", @secret="12345678901234567890">
 > p hotp.at(0)
 "755224"
  => "755224"
@@ -36,17 +36,20 @@ true
 > p hotp.verify("287082", :at => 2)
 false
  => false
+> p hotp.uri("J. Doe", :issuer => "ExampleNet Inc")
+"otpauth://hotp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=&issuer=ExampleNet%20Inc"
+ => "otpauth://hotp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=&issuer=ExampleNet%20Inc"
 ```
 
 ```ruby
 > totp = TOTP.new(Base32.encode('12345678901234567890'))
- => #<TOTP:0x7f9dd1825fe8 @secret="12345678901234567890", @digits=6, @digest="sha1", @interval=30>
+ => #<TOTP:0x7fa38681cfb0 @digits=6, @digest="sha1", @type="totp", @interval=30, @secret="12345678901234567890">
 > p totp.at(Time.now)
-"870674"
- => "870674"
+"829461"
+ => "829461"
 > p totp.current
-"870674"
- => "870674"
+"829461"
+ => "829461"
 > t = Time.gm(1997, 8, 29, 5, 14, 00)
  => Fri Aug 29 05:14:00 UTC 1997
 > p totp.at(t)
@@ -63,6 +66,10 @@ false
 > p totp.verify(281836, :at => t2, :drift => 25)
 true
  => true
+> p totp.uri("J. Doe", :issuer => "ExampleNet Inc")
+"otpauth://totp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30&issuer=ExampleNet%20Inc"
+ => "otpauth://totp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30&issuer=ExampleNet%20Inc"
+> 
 ```
 
 ## License

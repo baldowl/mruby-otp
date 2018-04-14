@@ -22,6 +22,7 @@ class HOTP
     @secret = Base32.decode secret
     @digits = options[:digits] || DEFAULT_DIGITS
     @digest = 'sha1'
+    @type = 'hotp'
   end
 
   ##
@@ -63,6 +64,33 @@ class HOTP
     self.at(opts[:at], :padding => opts[:padding]).to_s.securecmp(input_token.to_s)
   end
 
+  ##
+  # call-seq:
+  #    otp_generator.uri(string)                                        -> obj
+  #    otp_generator.uri(string, :issuer => string, :counter => int)    -> obj
+  #
+  # Returns an URI as specified by https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+  #
+  # Optional <tt>:issuer</tt> is the provider's name.
+  #
+  # Optional <tt>:counter</tt> defaults to zero and allows the provisioning of
+  # a key starting from an arbitrary point.
+  def uri account, options = {}
+    opts = {:issuer => nil, :counter => 0}.merge(options)
+    parameters = {
+      'secret' => Base32.encode(@secret, false),
+      'algorithm' => @digest.upcase,
+      'digits' => @digits
+    }.merge(extra_uri_parameters(options))
+    if opts[:issuer]
+      parameters['issuer'] = URI.encode opts[:issuer]
+      label = URI.encode "#{opts[:issuer]}:#{account}"
+    else
+      label = URI.encode account
+    end
+    %Q(otpauth://#{@type}/#{label}?#{parameters.map {|k, v| "#{k}=#{v}"}.join('&')})
+  end
+
   private
 
   def count_to_bytestring value, padding = 8
@@ -82,5 +110,9 @@ class HOTP
     else
       raise ArgumentError, 'invalid digest'
     end
+  end
+
+  def extra_uri_parameters options
+    {'counter' => options[:counter]}
   end
 end

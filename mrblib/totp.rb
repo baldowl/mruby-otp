@@ -30,6 +30,7 @@ class TOTP < HOTP
     super
     @interval = options[:interval] || DEFAULT_INTERVAL
     @digest = options[:digest] || DEFAULT_DIGEST
+    @type = 'totp'
   end
 
   ##
@@ -105,5 +106,9 @@ class TOTP < HOTP
     else
       super
     end
+  end
+
+  def extra_uri_parameters options
+    {'period' => @interval}
   end
 end

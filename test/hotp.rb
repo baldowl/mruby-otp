@@ -47,6 +47,57 @@ assert 'HOTP#verify' do
   assert_true hotp.verify(40032, :at => 19, :padding => false)
 end
 
+assert 'HOTP#uri' do
+  test_vectors = [
+    {
+      :secret => 'IFBEGRCFIZDUQ',
+      :digits => 6,
+      :account => 'J. Doe',
+      :issuer => 'ExampleNet Inc',
+      :counter => 123
+    },
+    {
+      :secret => Base32.encode('12345678901234567890'),
+      :digits => 8,
+      :account => 'alice@example.org',
+      :counter => 0
+    }
+  ]
+  test_vectors.each do |config|
+    hotp = HOTP.new config[:secret], :digits => config[:digits]
+
+    # otpauth://TYPE/LABEL?PARAMETERS
+    uri = hotp.uri config[:account], :issuer => config[:issuer],
+      :counter => config[:counter]
+
+    protocol = uri.split('://').first
+    type = uri.split('/')[2]
+    label = uri.split('/')[3].split('?').first
+    parameters = uri.split('?').last.split('&')
+
+    assert_equal 'otpauth', protocol
+    assert_equal 'hotp', type
+
+    # LABEL: accountname / issuer (":" / "%3A") *"%20" accountname
+    if config[:issuer]
+      assert_equal URI.encode("#{config[:issuer]}:#{config[:account]}"), label
+    else
+      assert_equal URI.encode(config[:account]), label
+    end
+
+    assert_equal "secret=#{config[:secret]}", parameters[0]
+    assert_equal "algorithm=SHA1", parameters[1]
+    assert_equal "digits=#{config[:digits]}", parameters[2]
+    assert_equal "counter=#{config[:counter]}", parameters[3]
+
+    if config[:issuer]
+      # issuer (recommended; URL-encoded; if present must be equals to the issuer prefix of the label)
+      assert_equal "issuer=#{URI.encode(config[:issuer])}", parameters[4]
+      assert_equal label.split('%3A').first, parameters[4].split('=').last
+    end
+  end
+end
+
 assert 'RFC compatibility' do
   hotp = HOTP.new(Base32.encode('12345678901234567890'))
   tokens = ['755224', '287082', '359152', '969429', '338314', '254676',
