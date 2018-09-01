@@ -33,34 +33,34 @@ end
 assert 'TOTP#timestamp_to_count' do
   totp = TOTP.new 'ABCDEFGH'
 
-  assert_equal 0, totp.send(:timestamp_to_count, 1)
-  assert_equal 0, totp.send(:timestamp_to_count, 29)
-  assert_equal 1, totp.send(:timestamp_to_count, 30)
-  assert_equal 1, totp.send(:timestamp_to_count, 59)
+  assert_equal 0, totp.__send__(:timestamp_to_count, 1)
+  assert_equal 0, totp.__send__(:timestamp_to_count, 29)
+  assert_equal 1, totp.__send__(:timestamp_to_count, 30)
+  assert_equal 1, totp.__send__(:timestamp_to_count, 59)
 
-  assert_equal 0, totp.send(:timestamp_to_count, Time.gm(1970, 1, 1, 0, 0, 0))
-  assert_equal 1, totp.send(:timestamp_to_count, Time.gm(1970, 1, 1, 0, 0, 30))
+  assert_equal 0, totp.__send__(:timestamp_to_count, Time.gm(1970, 1, 1, 0, 0, 0))
+  assert_equal 1, totp.__send__(:timestamp_to_count, Time.gm(1970, 1, 1, 0, 0, 30))
 
   # With a different interval
   totp = TOTP.new 'ABCDEFGH', :interval => 60
-  assert_equal 0, totp.send(:timestamp_to_count, 1)
-  assert_equal 0, totp.send(:timestamp_to_count, 59)
-  assert_equal 1, totp.send(:timestamp_to_count, 60)
+  assert_equal 0, totp.__send__(:timestamp_to_count, 1)
+  assert_equal 0, totp.__send__(:timestamp_to_count, 59)
+  assert_equal 1, totp.__send__(:timestamp_to_count, 60)
 end
 
 assert 'TOTP#map_to_digest' do
   totp = TOTP.new 'ABCDEFGH'
 
-  assert_raise(ArgumentError) { totp.send(:map_to_digest, 'garbage') }
+  assert_raise(ArgumentError) { totp.__send__(:map_to_digest, 'garbage') }
 
-  assert_nothing_raised { totp.send(:map_to_digest, 'sha1') }
-  assert_equal Digest::SHA1, totp.send(:map_to_digest, 'sha1')
+  assert_nothing_raised { totp.__send__(:map_to_digest, 'sha1') }
+  assert_equal Digest::SHA1, totp.__send__(:map_to_digest, 'sha1')
 
-  assert_nothing_raised { totp.send(:map_to_digest, 'sha256') }
-  assert_equal Digest::SHA256, totp.send(:map_to_digest, 'sha256')
+  assert_nothing_raised { totp.__send__(:map_to_digest, 'sha256') }
+  assert_equal Digest::SHA256, totp.__send__(:map_to_digest, 'sha256')
 
-  assert_nothing_raised { totp.send(:map_to_digest, 'sha512') }
-  assert_equal Digest::SHA512, totp.send(:map_to_digest, 'sha512')
+  assert_nothing_raised { totp.__send__(:map_to_digest, 'sha512') }
+  assert_equal Digest::SHA512, totp.__send__(:map_to_digest, 'sha512')
 end
 
 assert 'TOTP#current' do
