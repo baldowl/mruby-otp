@@ -10,7 +10,7 @@ jobs:
       MRUBY_CONFIG: /project/.travis_build_config.rb
     working_directory: /project
     docker:
-      - image: ruby:2.6.1 # not really important, but...
+      - image: ruby:2.6.2 # not really important, but...
     steps:
       - checkout
       - run: apt-get update -qq && apt-get install -y -qq bison
@@ -31,5 +31,7 @@ workflows:
           version: "1.4.1"
       - test_against_mruby:
           version: "2.0.0"
+      - test_against_mruby:
+          version: "2.0.1"
       - test_against_mruby:
           version: "master"
