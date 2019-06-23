@@ -35,14 +35,4 @@ workflows:
   test:
     jobs:
       - test_against_mruby:
-          version: "1.3.0"
-      - test_against_mruby:
-          version: "1.4.0"
-      - test_against_mruby:
-          version: "1.4.1"
-      - test_against_mruby:
-          version: "2.0.0"
-      - test_against_mruby:
-          version: "2.0.1"
-      - test_against_mruby:
           version: "master"
