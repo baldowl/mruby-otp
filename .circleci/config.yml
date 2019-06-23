@@ -7,7 +7,7 @@ jobs:
         description: "Version of mruby to test against"
         type: string
     environment:
-      MRUBY_CONFIG: /project/.travis_build_config.rb
+      MRUBY_CONFIG: /project/.ci_build_config.rb
     working_directory: /project
     docker:
       - image: ruby:2.6.2 # not really important, but...
