@@ -4,7 +4,6 @@ language: c
 
 compiler:
   - gcc
-  - clang
 
 env:
   - VERSION=master
