@@ -1,23 +1,7 @@
 version: 2.1
 
-jobs:
-  test_against_mruby:
-    parameters:
-      version:
-        description: "Version of mruby to test against"
-        type: string
-    environment:
-      MRUBY_CONFIG: /project/.ci_build_config.rb
-    working_directory: /project
-    docker:
-      - image: ruby:2.6.3
-    steps:
-      - checkout
-      - run: apt-get update -qq && apt-get install -y -qq bison
-      - run: git clone --depth 1 --branch << parameters.version >> https://github.com/mruby/mruby.git
-      - run: |
-          cd mruby
-          ./minirake test
+orbs:
+  mruby: baldowl/mruby@0.0.1
 
 workflows:
   version: 2
@@ -30,9 +14,9 @@ workflows:
               only:
                 - master
     jobs:
-      - test_against_mruby:
+      - mruby/test:
           version: "master"
   test:
     jobs:
-      - test_against_mruby:
+      - mruby/test:
           version: "master"
