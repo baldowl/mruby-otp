@@ -19,4 +19,6 @@ workflows:
   test:
     jobs:
       - mruby/test:
+          version: 2.1.0
+      - mruby/test:
           version: "master"
