@@ -4,7 +4,7 @@ assert 'TOTP#at' do
   assert_equal '058591', totp.at(29)
   assert_equal '233946', totp.at(30)
   assert_equal '233946', totp.at(59)
-  assert_equal 58591, totp.at(1, :padding => false)
+  assert_equal '58591', totp.at(1, :padding => false)
 
   # With more digits
   totp = TOTP.new 'ABCDEFGH', :digits => 10
@@ -12,7 +12,7 @@ assert 'TOTP#at' do
   assert_equal '1445058591', totp.at(29)
   assert_equal '0649233946', totp.at(30)
   assert_equal '0649233946', totp.at(59)
-  assert_equal 649233946, totp.at(59, :padding => false)
+  assert_equal '649233946', totp.at(59, :padding => false)
 
   # With an unsupported digest
   totp = TOTP.new 'ABCDEFGH', :digest => 'unsupported'
@@ -80,7 +80,7 @@ assert 'TOTP#verify' do
   assert_true totp.verify(totp.current(:padding => false), :at => Time.now, :padding => false)
 
   assert_true totp.verify('058591', :at => Time.gm(1970, 1, 1, 0, 0, 0))
-  assert_true totp.verify(58591, :at => Time.gm(1970, 1, 1, 0, 0, 0), :padding => false)
+  assert_true totp.verify('58591', :at => Time.gm(1970, 1, 1, 0, 0, 0), :padding => false)
   assert_true totp.verify('233946', :at => Time.gm(1970, 1, 1, 0, 0, 30))
 
   assert_false totp.verify(totp.at(Time.now - 31), :at => Time.now)

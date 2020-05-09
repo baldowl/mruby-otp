@@ -27,8 +27,8 @@ class HOTP
 
   ##
   # call-seq:
-  #    otp_generator.at(int)                         -> obj
-  #    otp_generator.at(int, :padding => boolean)    -> obj
+  #    otp_generator.at(int)                         -> string
+  #    otp_generator.at(int, :padding => boolean)    -> string
   #
   # Calculates the OTP for +count+.
   #
@@ -43,11 +43,8 @@ class HOTP
       (hmac[offset + 1].ord & 0xFF) << 16 |
       (hmac[offset + 2].ord & 0xFF) << 8 |
       (hmac[offset + 3].ord & 0xFF)
-    if opts[:padding]
-      (code % 10 ** @digits).to_s.rjust(@digits, '0')
-    else
-      code % 10 ** @digits
-    end
+    otp = (code % 10 ** @digits).to_s
+    opts[:padding] ? otp.rjust(@digits, '0') : otp
   end
 
   ##

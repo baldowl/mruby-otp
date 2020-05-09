@@ -35,9 +35,9 @@ class TOTP < HOTP
 
   ##
   # call-seq:
-  #    otp_generator.at(timestamp)                   -> obj
-  #    otp_generator.at(int)                         -> obj
-  #    otp_generator.at(int, :padding => boolean)    -> obj
+  #    otp_generator.at(timestamp)                   -> string
+  #    otp_generator.at(int)                         -> string
+  #    otp_generator.at(int, :padding => boolean)    -> string
   #
   # Calculates the OTP for +timestamp+ (which can be an instance of Time or an
   # integer representing the number of seconds since Epoch).
@@ -53,8 +53,8 @@ class TOTP < HOTP
 
   ##
   # call-seq:
-  #    otp_generator.current                         -> obj
-  #    otp_generator.current(:padding => boolean)    -> obj
+  #    otp_generator.current                         -> string
+  #    otp_generator.current(:padding => boolean)    -> string
   #
   # Calculates the OTP for the system's current time.
   #

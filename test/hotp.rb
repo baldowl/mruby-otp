@@ -2,13 +2,13 @@ assert 'HOTP#at' do
   hotp = HOTP.new 'ABCDEFGH'
   assert_equal '233946', hotp.at(1)
   assert_equal '040032', hotp.at(19)
-  assert_equal 40032, hotp.at(19, :padding => false)
+  assert_equal '40032', hotp.at(19, :padding => false)
 
   # With more digits
   hotp = HOTP.new 'ABCDEFGH', :digits => 10
   assert_equal '0649233946', hotp.at(1)
   assert_equal '0386040032', hotp.at(19)
-  assert_equal 386040032, hotp.at(19, :padding => false)
+  assert_equal '386040032', hotp.at(19, :padding => false)
 end
 
 assert 'HOTP#count_to_bytestring' do
@@ -44,7 +44,7 @@ assert 'HOTP#verify' do
 
   assert_true hotp.verify('233946', :at => 1)
   assert_true hotp.verify('040032', :at => 19)
-  assert_true hotp.verify(40032, :at => 19, :padding => false)
+  assert_true hotp.verify('40032', :at => 19, :padding => false)
 end
 
 assert 'HOTP#uri' do
