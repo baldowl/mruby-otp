@@ -5,10 +5,11 @@ compiler:
 
 env:
   - VERSION=2.1.0
+  - VERSION=2.1.1
   - VERSION=master
 
 script:
   - export MRUBY_CONFIG="$TRAVIS_BUILD_DIR/.ci_build_config.rb"
   - git clone --depth 1 --branch $VERSION https://github.com/mruby/mruby.git
   - cd mruby
-  - ./minirake test
+  - rake test
