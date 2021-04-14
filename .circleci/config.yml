@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  mruby: baldowl/mruby@0.0.4
+  mruby: baldowl/mruby@0.0.5
 
 workflows:
   version: 2
@@ -21,4 +21,4 @@ workflows:
       - mruby/test:
           matrix:
             parameters:
-              version: ["2.1.0", "2.1.1", "2.1.2", "master"]
+              version: ["2.1.0", "2.1.1", "2.1.2", "3.0.0", "master"]
