@@ -21,4 +21,4 @@ workflows:
       - mruby/test:
           matrix:
             parameters:
-              version: ["2.1.2", "3.0.0", "master"]
+              version: ["3.0.0", "master"]
