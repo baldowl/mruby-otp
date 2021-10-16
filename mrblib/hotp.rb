@@ -58,7 +58,7 @@ class HOTP
   # of <tt>:padding</tt> (default value: +true+)
   def verify input_token, options = {}
     opts = {:at => 0, :padding => true}.merge(options)
-    self.at(opts[:at], :padding => opts[:padding]).to_s.securecmp(input_token.to_s)
+    self.at(opts[:at], {:padding => opts[:padding]}).to_s.securecmp(input_token.to_s)
   end
 
   ##

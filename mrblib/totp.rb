@@ -48,7 +48,7 @@ class TOTP < HOTP
   def at timestamp, options = {}
     opts = {:padding => true}.merge(options)
     count = timestamp_to_count timestamp
-    super count, :padding => opts[:padding]
+    super count, {:padding => opts[:padding]}
   end
 
   ##
@@ -63,7 +63,7 @@ class TOTP < HOTP
   # <tt>:padding</tt> (default value: +true+).
   def current options = {}
     opts = {:padding => true}.merge(options)
-    self.at Time.now, :padding => opts[:padding]
+    self.at Time.now, {:padding => opts[:padding]}
   end
 
   ##
@@ -85,7 +85,7 @@ class TOTP < HOTP
       drift = opts[:drift].to_i.abs
       times = (tp - drift).step((tp + drift), @interval).to_a
       times << (tp + drift) if times.last < (tp + drift)
-      times.any? {|ts| super input_token, :at => ts, :padding => opts[:padding]}
+      times.any? {|ts| super input_token, {:at => ts, :padding => opts[:padding]}}
     else
       super input_token, opts
     end
