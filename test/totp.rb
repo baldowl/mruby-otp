@@ -4,22 +4,22 @@ assert 'TOTP#at' do
   assert_equal '058591', totp.at(29)
   assert_equal '233946', totp.at(30)
   assert_equal '233946', totp.at(59)
-  assert_equal '58591', totp.at(1, :padding => false)
+  assert_equal '58591', totp.at(1, padding: false)
 
   # With more digits
-  totp = TOTP.new 'ABCDEFGH', :digits => 10
+  totp = TOTP.new 'ABCDEFGH', digits: 10
   assert_equal '1445058591', totp.at(1)
   assert_equal '1445058591', totp.at(29)
   assert_equal '0649233946', totp.at(30)
   assert_equal '0649233946', totp.at(59)
-  assert_equal '649233946', totp.at(59, :padding => false)
+  assert_equal '649233946', totp.at(59, padding: false)
 
   # With an unsupported digest
-  totp = TOTP.new 'ABCDEFGH', :digest => 'unsupported'
+  totp = TOTP.new 'ABCDEFGH', digest: 'unsupported'
   assert_raise(ArgumentError) { totp.at 1 }
 
   # With a different interval
-  totp = TOTP.new 'ABCDEFGH', :interval => 60
+  totp = TOTP.new 'ABCDEFGH', interval: 60
   assert_equal '058591', totp.at(1)
   assert_equal '058591', totp.at(59)
   assert_equal '233946', totp.at(60)
@@ -42,7 +42,7 @@ assert 'TOTP#timestamp_to_count' do
   assert_equal 1, totp.__send__(:timestamp_to_count, Time.gm(1970, 1, 1, 0, 0, 30))
 
   # With a different interval
-  totp = TOTP.new 'ABCDEFGH', :interval => 60
+  totp = TOTP.new 'ABCDEFGH', interval: 60
   assert_equal 0, totp.__send__(:timestamp_to_count, 1)
   assert_equal 0, totp.__send__(:timestamp_to_count, 59)
   assert_equal 1, totp.__send__(:timestamp_to_count, 60)
@@ -66,8 +66,8 @@ end
 assert 'TOTP#current' do
   totp = TOTP.new 'ABCDEFGH'
   assert_equal totp.at(Time.now), totp.current
-  assert_equal totp.at(Time.now, :padding => true), totp.current(:padding => true)
-  assert_equal totp.at(Time.now, :padding => false), totp.current(:padding => false)
+  assert_equal totp.at(Time.now, padding: true), totp.current(padding: true)
+  assert_equal totp.at(Time.now, padding: false), totp.current(padding: false)
   assert_not_equal totp.at(Time.now.to_i - 1_000), totp.current
 end
 
@@ -76,73 +76,73 @@ assert 'TOTP#verify' do
 
   # Slightly redundant
   assert_true totp.verify(totp.current)
-  assert_true totp.verify(totp.current, :at => Time.now)
-  assert_true totp.verify(totp.current(:padding => false), :at => Time.now, :padding => false)
+  assert_true totp.verify(totp.current, at: Time.now)
+  assert_true totp.verify(totp.current(padding: false), at: Time.now, padding: false)
 
-  assert_true totp.verify('058591', :at => Time.gm(1970, 1, 1, 0, 0, 0))
-  assert_true totp.verify('58591', :at => Time.gm(1970, 1, 1, 0, 0, 0), :padding => false)
-  assert_true totp.verify('233946', :at => Time.gm(1970, 1, 1, 0, 0, 30))
+  assert_true totp.verify('058591', at: Time.gm(1970, 1, 1, 0, 0, 0))
+  assert_true totp.verify('58591', at: Time.gm(1970, 1, 1, 0, 0, 0), padding: false)
+  assert_true totp.verify('233946', at: Time.gm(1970, 1, 1, 0, 0, 30))
 
-  assert_false totp.verify(totp.at(Time.now - 31), :at => Time.now)
-  assert_true totp.verify(totp.at(Time.now - 31), :at => Time.now, :drift => 60)
+  assert_false totp.verify(totp.at(Time.now - 31), at: Time.now)
+  assert_true totp.verify(totp.at(Time.now - 31), at: Time.now, drift: 60)
 end
 
 assert 'TOTP#uri' do
   test_vectors = [
     {
-      :secret => 'ABCDEFGH',
-      :digits => 6,
-      :interval => 30,
-      :digest => 'SHA1',
-      :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      secret: 'ABCDEFGH',
+      digits: 6,
+      interval: 30,
+      digest: 'SHA1',
+      account: 'bob@example.com',
+      issuer: 'ExampleNet Inc'
     },
     {
-      :secret => 'ABCDEFGH',
-      :digits => 8,
-      :interval => 30,
-      :digest => 'SHA1',
-      :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      secret: 'ABCDEFGH',
+      digits: 8,
+      interval: 30,
+      digest: 'SHA1',
+      account: 'bob@example.com',
+      issuer: 'ExampleNet Inc'
     },
     {
-      :secret => 'ABCDEFGH',
-      :digits => 6,
-      :interval => 55,
-      :digest => 'SHA1',
-      :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      secret: 'ABCDEFGH',
+      digits: 6,
+      interval: 55,
+      digest: 'SHA1',
+      account: 'bob@example.com',
+      issuer: 'ExampleNet Inc'
     },
     {
-      :secret => 'ABCDEFGH',
-      :digits => 6,
-      :interval => 30,
-      :digest => 'SHA256',
-      :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      secret: 'ABCDEFGH',
+      digits: 6,
+      interval: 30,
+      digest: 'SHA256',
+      account: 'bob@example.com',
+      issuer: 'ExampleNet Inc'
     },
     {
-      :secret => 'ABCDEFGH',
-      :digits => 6,
-      :interval => 30,
-      :digest => 'SHA512',
-      :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      secret: 'ABCDEFGH',
+      digits: 6,
+      interval: 30,
+      digest: 'SHA512',
+      account: 'bob@example.com',
+      issuer: 'ExampleNet Inc'
     },
     {
-      :secret => 'ABCDEFGH',
-      :digits => 6,
-      :interval => 30,
-      :digest => 'SHA1',
-      :account => 'bob@example.com'
+      secret: 'ABCDEFGH',
+      digits: 6,
+      interval: 30,
+      digest: 'SHA1',
+      account: 'bob@example.com'
     }
   ]
   test_vectors.each do |config|
-    totp = TOTP.new config[:secret], :digits => config[:digits],
-      :interval => config[:interval], :digest => config[:digest]
+    totp = TOTP.new config[:secret], digits: config[:digits],
+      interval: config[:interval], digest: config[:digest]
 
     # otpauth://TYPE/LABEL?PARAMETERS
-    uri = totp.uri config[:account], :issuer => config[:issuer]
+    uri = totp.uri config[:account], issuer: config[:issuer]
 
     protocol = uri.split('://').first
     type = uri.split('/')[2]
@@ -178,9 +178,9 @@ assert 'RFC compatibility' do
   # https://www.rfc-editor.org/errata_search.php?rfc=6238
   test_vectors = [
     {
-      :digest => 'sha1',
-      :secret => '12345678901234567890',
-      :tokens => [
+      digest: 'sha1',
+      secret: '12345678901234567890',
+      tokens: [
         [59,          '94287082'],
         [1111111109,  '07081804'],
         [1111111111,  '14050471'],
@@ -190,9 +190,9 @@ assert 'RFC compatibility' do
       ]
     },
     {
-      :digest => 'sha256',
-      :secret => '12345678901234567890123456789012',
-      :tokens => [
+      digest: 'sha256',
+      secret: '12345678901234567890123456789012',
+      tokens: [
         [59,          '46119246'],
         [1111111109,  '68084774'],
         [1111111111,  '67062674'],
@@ -202,9 +202,9 @@ assert 'RFC compatibility' do
       ]
     },
     {
-      :digest => 'sha512',
-      :secret => '1234567890123456789012345678901234567890123456789012345678901234',
-      :tokens => [
+      digest: 'sha512',
+      secret: '1234567890123456789012345678901234567890123456789012345678901234',
+      tokens: [
         [59,          '90693936'],
         [1111111109,  '25091201'],
         [1111111111,  '99943326'],
@@ -215,9 +215,9 @@ assert 'RFC compatibility' do
     }
   ]
   test_vectors.each do |config|
-    totp = TOTP.new(Base32.encode(config[:secret]), :digest => config[:digest], :digits => 8)
+    totp = TOTP.new(Base32.encode(config[:secret]), digest: config[:digest], digits: 8)
     config[:tokens].each do |timestamp, token|
-      assert_true totp.verify(token, :at => timestamp)
+      assert_true totp.verify(token, at: timestamp)
     end
   end
 end

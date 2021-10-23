@@ -2,13 +2,13 @@ assert 'HOTP#at' do
   hotp = HOTP.new 'ABCDEFGH'
   assert_equal '233946', hotp.at(1)
   assert_equal '040032', hotp.at(19)
-  assert_equal '40032', hotp.at(19, :padding => false)
+  assert_equal '40032', hotp.at(19, padding: false)
 
   # With more digits
-  hotp = HOTP.new 'ABCDEFGH', :digits => 10
+  hotp = HOTP.new 'ABCDEFGH', digits: 10
   assert_equal '0649233946', hotp.at(1)
   assert_equal '0386040032', hotp.at(19)
-  assert_equal '386040032', hotp.at(19, :padding => false)
+  assert_equal '386040032', hotp.at(19, padding: false)
 end
 
 assert 'HOTP#count_to_bytestring' do
@@ -42,33 +42,33 @@ end
 assert 'HOTP#verify' do
   hotp = HOTP.new 'ABCDEFGH'
 
-  assert_true hotp.verify('233946', :at => 1)
-  assert_true hotp.verify('040032', :at => 19)
-  assert_true hotp.verify('40032', :at => 19, :padding => false)
+  assert_true hotp.verify('233946', at: 1)
+  assert_true hotp.verify('040032', at: 19)
+  assert_true hotp.verify('40032', at: 19, padding: false)
 end
 
 assert 'HOTP#uri' do
   test_vectors = [
     {
-      :secret => 'IFBEGRCFIZDUQ',
-      :digits => 6,
-      :account => 'J. Doe',
-      :issuer => 'ExampleNet Inc',
-      :counter => 123
+      secret: 'IFBEGRCFIZDUQ',
+      digits: 6,
+      account: 'J. Doe',
+      issuer: 'ExampleNet Inc',
+      counter: 123
     },
     {
-      :secret => Base32.encode('12345678901234567890'),
-      :digits => 8,
-      :account => 'alice@example.org',
-      :counter => 0
+      secret: Base32.encode('12345678901234567890'),
+      digits: 8,
+      account: 'alice@example.org',
+      counter: 0
     }
   ]
   test_vectors.each do |config|
-    hotp = HOTP.new config[:secret], :digits => config[:digits]
+    hotp = HOTP.new config[:secret], digits: config[:digits]
 
     # otpauth://TYPE/LABEL?PARAMETERS
-    uri = hotp.uri config[:account], :issuer => config[:issuer],
-      :counter => config[:counter]
+    uri = hotp.uri config[:account], issuer: config[:issuer],
+      counter: config[:counter]
 
     protocol = uri.split('://').first
     type = uri.split('/')[2]
@@ -105,6 +105,6 @@ assert 'RFC compatibility' do
 
   tokens.each_with_index do |token, position|
     assert_equal token, hotp.at(position)
-    assert_true hotp.verify(token, :at => position)
+    assert_true hotp.verify(token, at: position)
   end
 end
