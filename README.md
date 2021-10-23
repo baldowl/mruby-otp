@@ -30,13 +30,13 @@ end
 > p hotp.verify("755224")
 true
  => true
-> p hotp.verify("287082", :at => 1)
+> p hotp.verify("287082", at: 1)
 true
  => true
-> p hotp.verify("287082", :at => 2)
+> p hotp.verify("287082", at: 2)
 false
  => false
-> p hotp.uri("J. Doe", :issuer => "ExampleNet Inc")
+> p hotp.uri("J. Doe", issuer: "ExampleNet Inc")
 "otpauth://hotp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=&issuer=ExampleNet%20Inc"
  => "otpauth://hotp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=&issuer=ExampleNet%20Inc"
 ```
@@ -55,18 +55,18 @@ false
 > p totp.at(t)
 "281836"
  => "281836"
-> p totp.verify(281836, :at => t)
+> p totp.verify(281836, at: t)
 true
  => true
 > t2 = Time.gm(1997, 8, 29, 5, 14, 45)
  => Fri Aug 29 05:14:45 UTC 1997
-> p totp.verify(281836, :at => t2)
+> p totp.verify(281836, at: t2)
 false
  => false
-> p totp.verify(281836, :at => t2, :drift => 25)
+> p totp.verify(281836, at: t2, drift: 25)
 true
  => true
-> p totp.uri("J. Doe", :issuer => "ExampleNet Inc")
+> p totp.uri("J. Doe", issuer: "ExampleNet Inc")
 "otpauth://totp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30&issuer=ExampleNet%20Inc"
  => "otpauth://totp/ExampleNet%20Inc%3AJ.%20Doe?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30&issuer=ExampleNet%20Inc"
 > 

@@ -2,7 +2,7 @@
 #
 #    totp = TOTP.new(Base32.encode('12345678901234567890'))
 #    otp = totp.at(Time.gm(1970, 1, 1, 0, 0, 0))
-#    totp.verify(otp, :at => 42)
+#    totp.verify(otp, at: 42)
 class TOTP < HOTP
   # Default interval (in seconds) used to calculate the time steps since Epoch.
   DEFAULT_INTERVAL = 30
@@ -11,8 +11,8 @@ class TOTP < HOTP
 
   ##
   # call-seq:
-  #    TOTP.new(string)                                                         -> obj
-  #    TOTP.new(string, :digits => int, :interval => int, :digest => string)    -> obj
+  #    TOTP.new(string)                                                -> obj
+  #    TOTP.new(string, digits: int, interval: int, digest: string)    -> obj
   #
   # Returns the OTP generator object.
   #
@@ -26,18 +26,18 @@ class TOTP < HOTP
   # Optional <tt>:digest</tt> permits the selection of a different digest
   # algoritm; supported values are +sha1+, +SHA1+, +sha256+, +SHA256+,
   # +sha512+ and +SHA512+.
-  def initialize secret, options = {}
-    super
-    @interval = options[:interval] || DEFAULT_INTERVAL
-    @digest = options[:digest] || DEFAULT_DIGEST
+  def initialize secret, digits: DEFAULT_DIGITS, interval: DEFAULT_INTERVAL, digest: DEFAULT_DIGEST
+    super secret, **{digits: digits}
+    @interval = interval
+    @digest = digest
     @type = 'totp'
   end
 
   ##
   # call-seq:
-  #    otp_generator.at(timestamp)                   -> string
-  #    otp_generator.at(int)                         -> string
-  #    otp_generator.at(int, :padding => boolean)    -> string
+  #    otp_generator.at(timestamp)                -> string
+  #    otp_generator.at(int)                      -> string
+  #    otp_generator.at(int, padding: boolean)    -> string
   #
   # Calculates the OTP for +timestamp+ (which can be an instance of Time or an
   # integer representing the number of seconds since Epoch).
@@ -45,31 +45,29 @@ class TOTP < HOTP
   # The generated OTPs are normally padded with "0" if they are shorter than
   # the required length; this behavior can be controlled with
   # <tt>:padding</tt> (default value: +true+).
-  def at timestamp, options = {}
-    opts = {:padding => true}.merge(options)
+  def at timestamp, padding: true
     count = timestamp_to_count timestamp
-    super count, {:padding => opts[:padding]}
+    super count, **{padding: padding}
   end
 
   ##
   # call-seq:
-  #    otp_generator.current                         -> string
-  #    otp_generator.current(:padding => boolean)    -> string
+  #    otp_generator.current                      -> string
+  #    otp_generator.current(padding: boolean)    -> string
   #
   # Calculates the OTP for the system's current time.
   #
   # The generated OTPs are normally padded with "0" if they are shorter than
   # the required length; this behavior can be controlled with
   # <tt>:padding</tt> (default value: +true+).
-  def current options = {}
-    opts = {:padding => true}.merge(options)
-    self.at Time.now, {:padding => opts[:padding]}
+  def current padding: true
+    self.at Time.now, padding: padding
   end
 
   ##
   # call-seq:
-  #    otp_generator.verify(string)                                                    -> obj
-  #    otp_generator.verify(string, :at => int, :padding => boolean, :drift => int)    -> obj
+  #    otp_generator.verify(string)                                           -> obj
+  #    otp_generator.verify(string, at: int, padding: boolean, drift: int)    -> obj
   #
   # Compare <tt>input_token</tt>, submitted by the user, with the OTP
   # generated for <tt>:at</tt> (default value: <tt>Time.now</tt>); both the
@@ -78,16 +76,15 @@ class TOTP < HOTP
   #
   # User and server's clocks can be out-of-sync; with <tt>:drift</tt> you can
   # specify the number of seconds they're allowed to differ.
-  def verify input_token, options = {}
-    opts = {:at => Time.now, :padding => true, :drift => nil}.merge(options)
-    if opts[:drift] && opts[:drift].to_i.abs > 0
-      tp = opts[:at].to_i
-      drift = opts[:drift].to_i.abs
+  def verify input_token, at: Time.now, padding: true, drift: 0
+    if drift.to_i.abs > 0
+      tp = at.to_i
+      drift = drift.to_i.abs
       times = (tp - drift).step((tp + drift), @interval).to_a
       times << (tp + drift) if times.last < (tp + drift)
-      times.any? {|ts| super input_token, {:at => ts, :padding => opts[:padding]}}
+      times.any? {|ts| super input_token, **{at: ts, padding: padding}}
     else
-      super input_token, opts
+      super input_token, **{at: at, padding: padding}
     end
   end
 
