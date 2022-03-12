@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: "0 5 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        mruby_version:
+          - "3.0.0"
+          - "master"
+    name: mruby ${{ matrix.mruby_version }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Clone mruby ${{ matrix.mruby_version }}
+        uses: actions/checkout@v3
+        with:
+          repository: mruby/mruby
+          ref: ${{ matrix.mruby_version }}
+          path: mruby
+      - name: Build & test
+        env:
+          CC: gcc
+          MRUBY_CONFIG: ${{ github.workspace }}/.ci_build_config.rb
+        run: |
+          cd mruby
+          rake test
