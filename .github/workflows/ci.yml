@@ -17,6 +17,7 @@ jobs:
         mruby_version:
           - "3.0.0"
           - "3.1.0"
+          - "3.2.0"
           - "master"
     name: mruby ${{ matrix.mruby_version }}
     runs-on: ubuntu-latest
