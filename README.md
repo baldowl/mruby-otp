@@ -1,4 +1,4 @@
-# mruby-otp [![CircleCI](https://circleci.com/gh/baldowl/mruby-otp.svg?style=svg)](https://circleci.com/gh/baldowl/mruby-otp) [![Actions Status: CI](https://github.com/baldowl/mruby-otp/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/baldowl/mruby-otp/actions?query=workflow%3ACI+branch%3Amaster) [![GitHub version](https://badge.fury.io/gh/baldowl%2Fmruby-otp.svg)](https://badge.fury.io/gh/baldowl%2Fmruby-otp)
+# mruby-otp [![Actions Status: CI](https://github.com/baldowl/mruby-otp/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/baldowl/mruby-otp/actions?query=workflow%3ACI+branch%3Amaster) [![GitHub version](https://badge.fury.io/gh/baldowl%2Fmruby-otp.svg)](https://badge.fury.io/gh/baldowl%2Fmruby-otp)
 
 A library to generate and verify OTPs (HOTP & TOTP) according to [RFC
 4226](http://tools.ietf.org/html/rfc4226) and [RFC
