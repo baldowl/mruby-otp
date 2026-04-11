@@ -95,7 +95,9 @@ assert 'TOTP#uri' do
       :interval => 30,
       :digest => 'SHA1',
       :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      :issuer => 'ExampleNet Inc',
+      :encoded_label => 'ExampleNet%20Inc%3Abob%40example.com',
+      :encoded_issuer => 'ExampleNet%20Inc'
     },
     {
       :secret => 'ABCDEFGH',
@@ -103,7 +105,9 @@ assert 'TOTP#uri' do
       :interval => 30,
       :digest => 'SHA1',
       :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      :issuer => 'ExampleNet Inc',
+      :encoded_label => 'ExampleNet%20Inc%3Abob%40example.com',
+      :encoded_issuer => 'ExampleNet%20Inc'
     },
     {
       :secret => 'ABCDEFGH',
@@ -111,7 +115,9 @@ assert 'TOTP#uri' do
       :interval => 55,
       :digest => 'SHA1',
       :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      :issuer => 'ExampleNet Inc',
+      :encoded_label => 'ExampleNet%20Inc%3Abob%40example.com',
+      :encoded_issuer => 'ExampleNet%20Inc'
     },
     {
       :secret => 'ABCDEFGH',
@@ -119,7 +125,9 @@ assert 'TOTP#uri' do
       :interval => 30,
       :digest => 'SHA256',
       :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      :issuer => 'ExampleNet Inc',
+      :encoded_label => 'ExampleNet%20Inc%3Abob%40example.com',
+      :encoded_issuer => 'ExampleNet%20Inc'
     },
     {
       :secret => 'ABCDEFGH',
@@ -127,14 +135,17 @@ assert 'TOTP#uri' do
       :interval => 30,
       :digest => 'SHA512',
       :account => 'bob@example.com',
-      :issuer => 'ExampleNet Inc'
+      :issuer => 'ExampleNet Inc',
+      :encoded_label => 'ExampleNet%20Inc%3Abob%40example.com',
+      :encoded_issuer => 'ExampleNet%20Inc'
     },
     {
       :secret => 'ABCDEFGH',
       :digits => 6,
       :interval => 30,
       :digest => 'SHA1',
-      :account => 'bob@example.com'
+      :account => 'bob@example.com',
+      :encoded_account => 'bob%40example.com'
     }
   ]
   test_vectors.each do |config|
@@ -154,9 +165,9 @@ assert 'TOTP#uri' do
 
     # LABEL: accountname / issuer (":" / "%3A") *"%20" accountname
     if config[:issuer]
-      assert_equal URI.encode("#{config[:issuer]}:#{config[:account]}"), label
+      assert_equal config[:encoded_label], label
     else
-      assert_equal URI.encode(config[:account]), label
+      assert_equal config[:encoded_account], label
     end
 
     assert_equal "secret=#{config[:secret]}", parameters[0]
@@ -166,7 +177,7 @@ assert 'TOTP#uri' do
 
     if config[:issuer]
       # issuer (recommended; URL-encoded; if present must be equals to the issuer prefix of the label)
-      assert_equal "issuer=#{URI.encode(config[:issuer])}", parameters[4]
+      assert_equal "issuer=#{config[:encoded_issuer]}", parameters[4]
       assert_equal label.split('%3A').first, parameters[4].split('=').last
     end
   end

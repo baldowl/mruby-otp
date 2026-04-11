@@ -54,13 +54,16 @@ assert 'HOTP#uri' do
       :digits => 6,
       :account => 'J. Doe',
       :issuer => 'ExampleNet Inc',
-      :counter => 123
+      :counter => 123,
+      :encoded_label => 'ExampleNet%20Inc%3AJ.%20Doe',
+      :encoded_issuer => 'ExampleNet%20Inc'
     },
     {
       :secret => Base32.encode('12345678901234567890'),
       :digits => 8,
       :account => 'alice@example.org',
-      :counter => 0
+      :counter => 0,
+      :encoded_account => 'alice%40example.org'
     }
   ]
   test_vectors.each do |config|
@@ -80,9 +83,9 @@ assert 'HOTP#uri' do
 
     # LABEL: accountname / issuer (":" / "%3A") *"%20" accountname
     if config[:issuer]
-      assert_equal URI.encode("#{config[:issuer]}:#{config[:account]}"), label
+      assert_equal config[:encoded_label], label
     else
-      assert_equal URI.encode(config[:account]), label
+      assert_equal config[:encoded_account], label
     end
 
     assert_equal "secret=#{config[:secret]}", parameters[0]
@@ -92,7 +95,7 @@ assert 'HOTP#uri' do
 
     if config[:issuer]
       # issuer (recommended; URL-encoded; if present must be equals to the issuer prefix of the label)
-      assert_equal "issuer=#{URI.encode(config[:issuer])}", parameters[4]
+      assert_equal "issuer=#{config[:encoded_issuer]}", parameters[4]
       assert_equal label.split('%3A').first, parameters[4].split('=').last
     end
   end

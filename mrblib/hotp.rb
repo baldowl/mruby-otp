@@ -80,10 +80,10 @@ class HOTP
       'digits' => @digits
     }.merge(extra_uri_parameters(options))
     if opts[:issuer]
-      parameters['issuer'] = URI.encode opts[:issuer]
-      label = URI.encode "#{opts[:issuer]}:#{account}"
+      parameters['issuer'] = percent_encode opts[:issuer]
+      label = percent_encode "#{opts[:issuer]}:#{account}"
     else
-      label = URI.encode account
+      label = percent_encode account
     end
     %Q(otpauth://#{@type}/#{label}?#{parameters.map {|k, v| "#{k}=#{v}"}.join('&')})
   end
@@ -111,5 +111,18 @@ class HOTP
 
   def extra_uri_parameters options
     {'counter' => options[:counter]}
+  end
+
+  def percent_encode string
+    string.bytes.map { |b|
+      if (b >= 0x41 && b <= 0x5A) || # A-Z
+         (b >= 0x61 && b <= 0x7A) || # a-z
+         (b >= 0x30 && b <= 0x39) || # 0-9
+         b == 0x2D || b == 0x2E || b == 0x5F || b == 0x7E # - . _ ~
+        b.chr
+      else
+        sprintf("%%%02X", b)
+      end
+    }.join
   end
 end
