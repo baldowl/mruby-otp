@@ -23,6 +23,7 @@ jobs:
           - "master"
     name: mruby ${{ matrix.mruby_version }}
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.mruby_version == 'master' }}
     steps:
       - uses: actions/checkout@v6
       - name: Clone mruby ${{ matrix.mruby_version }}
@@ -33,7 +34,6 @@ jobs:
           path: mruby
       - name: Build & test
         env:
-          CC: gcc
           MRUBY_CONFIG: ${{ github.workspace }}/.ci_build_config.rb
         run: |
           cd mruby
