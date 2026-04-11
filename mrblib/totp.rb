@@ -85,7 +85,8 @@ class TOTP < HOTP
       drift = opts[:drift].to_i.abs
       times = (tp - drift).step((tp + drift), @interval).to_a
       times << (tp + drift) if times.last < (tp + drift)
-      times.any? {|ts| super input_token, {:at => ts, :padding => opts[:padding]}}
+      results = times.map {|ts| super input_token, {:at => ts, :padding => opts[:padding]}}
+      results.any?
     else
       super input_token, opts
     end
