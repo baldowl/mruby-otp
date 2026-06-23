@@ -26,9 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.mruby_version == 'master' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Clone mruby ${{ matrix.mruby_version }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: mruby/mruby
           ref: ${{ matrix.mruby_version }}
